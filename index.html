@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#f3efe7" />
+  <meta name="description" content="木间 3D 木偶工坊——选木、蘸彩、手绘与拓印，制作你的专属纪念品。" />
+  <title>木间 MORI · 3D 木偶工坊</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232d4a3e'/%3E%3Ccircle cx='16' cy='10' r='5' fill='%23ead9bd'/%3E%3Cpath d='M12 15h8l4 13H8z' fill='%23c9674c'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="木间工坊首页">
+        <span class="brand-mark"><i data-lucide="sprout"></i></span>
+        <span class="brand-name">木间<span>MORI ATELIER</span></span>
+      </a>
+      <div class="project-title">
+        <span class="project-kicker">我的手作台</span>
+        <button id="project-name" title="重命名作品">春日雏菊</button>
+      </div>
+      <nav class="top-actions" aria-label="作品操作">
+        <button class="icon-button" id="undo" title="撤销 Ctrl+Z" aria-label="撤销" disabled><i data-lucide="undo-2"></i></button>
+        <button class="icon-button" id="redo" title="重做 Ctrl+Shift+Z" aria-label="重做" disabled><i data-lucide="redo-2"></i></button>
+        <button class="icon-button" id="immersive-toggle" title="沉浸模式 F" aria-label="沉浸模式"><i data-lucide="maximize"></i></button>
+        <span class="action-divider"></span>
+        <button class="icon-button" id="new-piece" title="新作品" aria-label="新作品"><i data-lucide="plus"></i></button>
+        <button class="icon-button" id="save-piece" title="保存" aria-label="保存"><i data-lucide="bookmark"></i></button>
+        <button class="primary-button" id="export-piece" title="留影 · 导出照片" aria-label="留影"><i data-lucide="camera"></i></button>
+      </nav>
+    </header>
+
+    <aside class="left-panel panel" aria-label="木坯与器形">
+      <button class="panel-close" data-close-drawer type="button" aria-label="收起面板"><i data-lucide="x"></i></button>
+      <div class="panel-heading">
+        <span class="eyebrow">THE BLANK</span>
+        <h2>木坯与器形</h2>
+        <p>桌上的木片、立着的木坯样板，都可以直接点选。</p>
+      </div>
+
+      <section class="fold">
+        <div class="fold-head">
+          <button class="fold-toggle" type="button" aria-expanded="false">
+            <span class="fold-icon"><i data-lucide="tree-pine"></i></span>
+            <span class="fold-title">木料</span>
+            <span class="fold-value" id="wood-fold-value">山毛榉 · 细密</span>          </button>
+        </div>
+        <div class="fold-body">
+          <div class="fold-inner">
+            <div class="wood-grid" id="wood-grid">
+              <button class="wood-card active" data-wood="beech"><span class="wood-sample beech"><b></b></span><span>山毛榉</span><small>BEECH</small></button>
+              <button class="wood-card" data-wood="maple"><span class="wood-sample maple"><b></b></span><span>枫木</span><small>MAPLE</small></button>
+              <button class="wood-card" data-wood="birch"><span class="wood-sample birch"><b></b></span><span>白桦</span><small>BIRCH</small></button>
+              <button class="wood-card" data-wood="walnut"><span class="wood-sample walnut"><b></b></span><span>胡桃木</span><small>WALNUT</small></button>
+            </div>
+            <span class="fold-note" id="wood-detail">细密 · 温润</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="fold">
+        <div class="fold-head">
+          <button class="fold-toggle" type="button" aria-expanded="false">
+            <span class="fold-icon"><i data-lucide="shapes"></i></span>
+            <span class="fold-title">器形</span>
+            <span class="fold-value" id="shape-fold-value">球 + 圆锥 · 14 cm</span>          </button>
+        </div>
+        <div class="fold-body">
+          <div class="fold-inner">
+            <div class="param-heading"><span>横截面图纸</span><button id="reset-shape" type="button" title="复原横截面" aria-label="复原横截面"><i data-lucide="rotate-ccw"></i></button></div>
+            <div class="profile-editor" id="profile-editor"></div>
+            <div class="form-tray" id="form-options">
+              <button class="form-chip active" data-form="cone" title="球头 + 圆锥身：经典棋子木坯"><svg viewBox="0 0 40 52"><path d="M20 2a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm-6 19h12l8 28H6l8-28Z"/></svg><small>圆锥</small></button>
+              <button class="form-chip" data-form="capsule" title="球头 + 半胶囊身：直壁拱顶"><svg viewBox="0 0 40 52"><path d="M20 2a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm-8 20h16a8 8 0 0 1 8 8v19H4V30a8 8 0 0 1 8-8Z"/></svg><small>胶囊</small></button>
+              <button class="form-chip" data-form="kokeshi" title="日本娃娃：喇叭身 + 大发头"><svg viewBox="0 0 40 52"><path d="M20 1a13 12 0 1 1 0 24 13 12 0 0 1 0-24Zm-8 22h16l5 26H7l5-26Z"/></svg><small>和娃娃</small></button>
+              <button class="form-chip" data-form="matryoshka" title="俄罗斯套娃：蛋形收腰 + 嵌头"><svg viewBox="0 0 40 52"><path d="M20 2a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 11c-8 0-14 8-14 18 0 10 6 18 14 18s14-8 14-18c0-10-6-18-14-18Z"/></svg><small>套娃</small></button>
+              <span class="form-note">拖动手柄<br/>重新车削</span>
+            </div>
+            <label class="param-row"><span>身高</span><input type="range" data-profile="height" min="1.4" max="3.1" step="0.01" value="2.3"/><b data-profile-value="height">23.0 cm</b></label>
+            <label class="param-row"><span>头高</span><input type="range" data-profile="squash" min="0.6" max="1.5" step="0.01" value="1"/><b data-profile-value="squash">标准</b></label>
+            <label class="param-row"><span>颈长</span><input type="range" data-profile="neck" min="0" max="0.22" step="0.005" value="0"/><b data-profile-value="neck">无</b></label>
+            <label class="param-row size-row"><span>尺寸</span><input type="range" id="size-input" min="6" max="60" step="1" value="14" aria-label="成品尺寸"/><b id="size-value">14 cm</b></label>
+            <span class="fold-note size-note">脖子默认归零，球头直接坐在车好的身体上。底柄上下拖改底座圆角，头柄往下拖让头嵌进身体——套娃就是这么车出来的。</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="fold">
+        <div class="fold-head">
+          <button class="fold-toggle" type="button" aria-expanded="false">
+            <span class="fold-icon"><i data-lucide="layers"></i></span>
+            <span class="fold-title">表面</span>
+            <span class="fold-value" id="finish-fold-value">蜂蜡</span>          </button>
+        </div>
+        <div class="fold-body">
+          <div class="fold-inner">
+            <div class="finish-tray" id="finish-options">
+              <button class="finish-chip raw" data-finish="raw" title="素木 · 不上油，木纹最哑"><span></span><small>素木</small></button>
+              <button class="finish-chip wax active" data-finish="wax" title="蜂蜡 · 温润半哑光"><span></span><small>蜂蜡</small></button>
+              <button class="finish-chip gloss" data-finish="gloss" title="亮漆 · 高光保护膜"><span></span><small>亮漆</small></button>
+            </div>
+            <span class="fold-note">颜料盒前缘的三枚小木片，就是素木、蜂蜡与亮漆的样板。</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="side-footer">
+        <button class="inspiration-link" id="inspiration-button" title="从灵感样板开始" aria-label="从灵感样板开始"><i data-lucide="sparkles"></i></button>
+      </div>
+    </aside>
+
+    <main id="workspace">
+      <div id="scene-container" aria-label="3D 木偶制作工作台"></div>
+      <svg class="guide-layer" id="guide-layer" aria-hidden="true"><line x1="0" y1="0" x2="0" y2="0"/></svg>
+      <div class="scene-topline">
+        <span class="live-dot"></span><span>实时 3D 工坊</span>
+        <span class="scene-separator"></span><span id="active-material-label">山毛榉 · 经典器形</span>
+      </div>
+      <div class="view-controls">
+        <button class="icon-button" id="view-front" title="正面视角"><i data-lucide="circle-user-round"></i></button>
+        <button class="icon-button" id="rotate-left" title="向左旋转 45°"><i data-lucide="rotate-ccw"></i></button>
+        <button class="icon-button" id="auto-rotate" title="自动旋转"><i data-lucide="rotate-3d"></i></button>
+        <button class="icon-button" id="rotate-right" title="向右旋转 45°"><i data-lucide="rotate-cw"></i></button>
+        <button class="icon-button" id="zoom-fit" title="复位视角"><i data-lucide="scan"></i></button>
+      </div>
+      <div class="scene-caption"><span id="scene-caption-title">雏菊与红裙</span><small>HAND-TURNED · HAND-PAINTED</small></div>
+      <button class="drawer-tab left" id="drawer-left-toggle" type="button" aria-label="打开木坯与器形"><i data-lucide="shapes"></i><span>器形</span></button>
+      <button class="drawer-tab right" id="drawer-right-toggle" type="button" aria-label="打开工具与颜色"><i data-lucide="palette"></i><span>工具</span></button>
+
+      <div class="tool-dock" id="tool-dock">
+        <div class="tool-group" id="tool-group">
+          <button class="tool-button active" data-tool="brush" title="画笔 B"><i data-lucide="paintbrush"></i><span>手绘</span></button>
+          <button class="tool-button" data-tool="stamp" title="海绵章 S"><i data-lucide="flower-2"></i><span>拓印</span></button>
+          <button class="tool-button" data-tool="sticker" title="眼睛贴纸 E"><i data-lucide="smile"></i><span>表情</span></button>
+          <button class="tool-button" data-tool="eraser" title="擦除 R"><i data-lucide="eraser"></i><span>擦除</span></button>
+        </div>
+        <span class="dock-divider"></span>
+        <div class="symmetry-group" id="symmetry-group">
+          <button data-mode="free" title="自由绘制" aria-label="自由绘制"><i data-lucide="pen-line"></i></button>
+          <button class="active" data-mode="mirror" title="左右对称" aria-label="左右对称"><i data-lucide="flip-horizontal-2"></i></button>
+          <button data-mode="radial" id="radial-button" title="环向重复" aria-label="环向重复"><i data-lucide="aperture"></i><b id="radial-count-label">4</b></button>
+          <button data-mode="lathe" title="沿当前高度车出一圈色带" aria-label="车绘"><i data-lucide="circle-dashed"></i></button>
+        </div>
+        <div class="radial-menu" id="radial-menu">
+          <span>环向重复</span>
+          <div><button data-count="2">2</button><button data-count="3">3</button><button class="active" data-count="4">4</button><button data-count="5">5</button><button data-count="6">6</button><button data-count="7">7</button><button data-count="8">8</button></div>
+        </div>
+      </div>
+      <div class="workspace-hint"><i data-lucide="mouse-pointer-2"></i><span>在木偶上拖动绘制 · 拖动空白处旋转 · 桌面的木片、笔筒、印章也能直接点选</span></div>
+    </main>
+
+    <aside class="right-panel panel" aria-label="工具与颜色">
+      <button class="panel-close" data-close-drawer type="button" aria-label="收起面板"><i data-lucide="x"></i></button>
+      <div class="panel-heading">
+        <span class="eyebrow">AT THE TABLE</span>
+        <h2>工具与颜色</h2>
+        <p>伸进颜料格蘸色，或从笔筒里换一支笔。</p>
+      </div>
+
+      <section class="fold">
+        <div class="fold-head">
+          <button class="fold-toggle" type="button" aria-expanded="false">
+            <span class="fold-icon"><i data-lucide="brush"></i></span>
+            <span class="fold-title">画笔</span>
+            <span class="fold-value" id="brush-name">圆头笔 · 4 号</span>          </button>
+        </div>
+        <div class="fold-body">
+          <div class="fold-inner">
+            <div class="brush-stage">
+              <div class="brush-illustration" id="brush-illustration" data-brush="round"><span class="brush-handle"></span><span class="brush-ferrule"></span><span class="brush-bristle"></span></div>
+              <div class="brush-copy">
+                <strong id="brush-display-name">圆头笔</strong>
+                <span id="brush-description">柔和铺色与花瓣</span>
+                <div class="brush-size-row"><i data-lucide="minus"></i><input id="brush-size" type="range" min="3" max="64" value="14" aria-label="笔刷大小"/><i data-lucide="plus"></i><b id="brush-size-value">14</b></div>
+              </div>
+            </div>
+            <div class="brush-list" id="brush-list">
+              <button data-brush="liner" title="极细勾线笔"><span class="mini-brush liner"></span><small>勾线</small></button>
+              <button class="active" data-brush="round" title="圆头笔"><span class="mini-brush round"></span><small>圆头</small></button>
+              <button data-brush="flat" title="平头刷"><span class="mini-brush flat"></span><small>平头</small></button>
+              <button data-brush="wash" title="板刷 · 羊毛排笔"><span class="mini-brush wash"></span><small>板刷</small></button>
+              <button data-brush="blush" title="晕染刷"><span class="mini-brush blush"></span><small>晕染</small></button>
+            </div>
+            <div class="paint-physics">
+              <label class="param-row water-row"><span>含水量</span><input type="range" id="water-input" min="0" max="100" step="1" value="42" aria-label="颜料含水量"/><b id="water-value">42%</b></label>
+              <span class="fold-note" id="water-note">水多：颜色更透、会化开，干得慢</span>
+              <div class="physics-foot">
+                <button class="chip-toggle" id="pressure-toggle" type="button" aria-pressed="false" title="笔压：压得越重，笔头越开" aria-label="笔压"><i data-lucide="gauge"></i></button>
+                <span class="wet-meter" id="wet-meter" style="--wet:0" title="笔尖上的颜料已经干了"><i></i><small>湿度</small></span>
+              </div>
+              <span class="fold-note">按住 Shift 拖动可以拉出一条直线。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fold">
+        <div class="fold-head">
+          <button class="fold-toggle" type="button" aria-expanded="false">
+            <span class="fold-icon"><i data-lucide="palette"></i></span>
+            <span class="fold-title">颜料</span>
+            <span class="fold-value" id="paint-fold-value">朱砂红</span>          </button>
+          <button class="fold-action" id="open-color-picker" title="调色"><i data-lucide="pipette"></i></button>
+        </div>
+        <div class="fold-body">
+          <div class="fold-inner">
+            <div class="paint-box">
+              <div class="paint-wells" id="paint-wells"></div>
+            </div>
+            <div class="current-paint"><span class="current-color" id="current-color"></span><div><small>笔尖颜色</small><strong id="color-name">朱砂红</strong></div><span id="color-hex">#B8493D</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fold" id="accessory-section">
+        <div class="fold-head">
+          <button class="fold-toggle" type="button" aria-expanded="false">
+            <span class="fold-icon"><i data-lucide="stamp"></i></span>
+            <span class="fold-title">印章与贴纸</span>
+            <span class="fold-value" id="stamp-fold-value">雏菊</span>          </button>
+        </div>
+        <div class="fold-body">
+          <div class="fold-inner">
+            <div class="accessory-head"><h3 id="accessory-title">海绵章</h3><span id="accessory-hint">蘸色后轻按</span></div>
+            <div class="accessory-grid" id="accessory-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="rinse-row"><button id="rinse-brush" title="清水洗笔" aria-label="清水洗笔"><i data-lucide="droplets"></i></button><span id="paint-status"><i data-lucide="check"></i>笔尖已蘸色</span></div>
+    </aside>
+
+    <div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
+
+    <div class="color-popover" id="color-popover" aria-hidden="true">
+      <div class="popover-heading"><div><span class="eyebrow">COLOR MIXER</span><h3>调一点新颜色</h3></div><button class="icon-button" id="close-color-picker"><i data-lucide="x"></i></button></div>
+      <canvas id="color-wheel" width="400" height="400" aria-label="色轮"></canvas>
+      <div class="color-value-row"><label for="color-lightness">明度</label><input type="range" id="color-lightness" min="20" max="100" value="70"/><span class="mix-preview" id="mix-preview"></span></div>
+      <div class="color-input-row"><label for="color-hex-input">HEX</label><input id="color-hex-input" value="#B8493D" maxlength="7" spellcheck="false"/></div>
+      <button class="primary-button full-width" id="add-color"><i data-lucide="plus"></i>添入颜料盒并蘸取</button>
+    </div>
+
+    <div class="inspiration-modal" id="inspiration-modal" aria-hidden="true">
+      <div class="modal-backdrop"></div>
+      <div class="inspiration-card">
+        <div class="popover-heading"><div><span class="eyebrow">A LITTLE INSPIRATION</span><h2>从一件小作品开始</h2></div><button class="icon-button" id="close-inspiration"><i data-lucide="x"></i></button></div>
+        <p>载入配色与彩绘，再继续添上你的细节。</p>
+        <div class="preset-grid">
+          <button data-preset="nordic"><span class="preset-art nordic"><b></b><i></i></span><strong>北欧雏菊</strong><small>红裙 · 花冠 · 亚麻围裙</small></button>
+          <button data-preset="forest"><span class="preset-art forest"><b></b><i></i></span><strong>森林来信</strong><small>叶绿 · 橡果 · 奶油衣领</small></button>
+          <button data-preset="blank"><span class="preset-art blank"><b></b><i></i></span><strong>一块素木</strong><small>保留木纹，自由创作</small></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"><i data-lucide="check"></i><span></span></div>
+    <div class="photo-flash" id="photo-flash"></div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
